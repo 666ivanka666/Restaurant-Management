@@ -2,6 +2,8 @@ import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { Menu } from './type';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
+import { Restaurant } from 'src/restaurant/type';
+import { BaseMenuItemDto } from 'src/menu_item/dto';
 import { MenuItem } from 'src/menu_item/type';
 
 @Injectable()
@@ -9,41 +11,18 @@ export class MenuService {
   private menus: Menu[] = [];
   constructor(private readonly restaurantService: RestaurantService) {}
 
-  // insertMenu(
-  //   restaurantId: string,
-  //   title: string,
-  //   description: string,
-  //   menusItems: MenuItem[],
-  // ): string {
-  //   const menuId = uuidv4();
-  //   this.restaurantService.findRestaurant(restaurantId);
-  //   this.menus.push(
-  //     new Menu(menuId, restaurantId, title, description, menusItems),
-  //   );
-  //   return menuId;
-  // }
-
   insertMenu(
-    restaurantId: string,
     title: string,
     description: string,
-    menuItems: string[],
+    menuItems: BaseMenuItemDto[],
   ): string {
     const menuId = uuidv4();
-    this.restaurantService.findRestaurant(restaurantId);
-    const menuItemObjects: MenuItem[] = menuItems.map((item: string) => ({
-      name: item,
-      description: '',
-      title: '',
-      id: '',
-      restaurantId: restaurantId,
-      menuId: menuId,
-      price: 0,
-    }));
+    const listOfMenuItems = menuItems.map(({ title }) => {
+      const menuItemId = uuidv4();
+      return new MenuItem(menuItemId, title);
+    });
 
-    this.menus.push(
-      new Menu(menuId, restaurantId, title, description, menuItemObjects),
-    );
+    this.menus.push(new Menu(menuId, title, description, listOfMenuItems));
 
     return menuId;
   }
@@ -56,19 +35,9 @@ export class MenuService {
     return menu;
   }
 
-  updateMenu(
-    menuId: string,
-    restaurantId: string,
-    title: string,
-    description: string,
-  ): Menu {
-    this.restaurantService.findRestaurant(restaurantId);
-
+  updateMenu(menuId: string, title: string, description: string): Menu {
     const [menu] = this.findMenu(menuId);
 
-    if (restaurantId) {
-      menu.restaurantId = restaurantId;
-    }
     if (title) {
       menu.title = title;
     }
@@ -92,5 +61,12 @@ export class MenuService {
     }
 
     return [this.menus[menuIndex], menuIndex];
+  }
+
+  assignRestaurant(menu: Menu, restaurant: Restaurant) {
+    if (!menu.restaurants) {
+      menu.restaurants = [];
+    }
+    menu.restaurants.push(restaurant);
   }
 }

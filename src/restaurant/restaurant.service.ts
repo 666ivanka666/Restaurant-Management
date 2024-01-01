@@ -20,11 +20,21 @@ export class RestaurantService {
 
     const listOfMenus: Menu[] = menus.map(
       ({ title, description, menuItems }) => {
-        const listOfMenuItems = menuItems.map(({ title }) => {
+        const listOfMenuItems = menuItems.map(({ name }) => {
           const menuItemId = uuidv4();
-
-          return new MenuItem(menuItemId, title);
+          return new MenuItem(menuItemId, '', '', name, '', 0);
         });
+        // const listOfMenuItems = menuItems.map(({ name }) => {
+        //   const menuItemId = uuidv4();
+        //   return new MenuItem(
+        //     menuItemId,
+        //     restaurantId,
+        //     menuId,
+        //     name,
+        //     description,
+        //     price,
+        //   );
+        // }); PITATI ZASTO OVDJE NE PREPOZNAJE PRICE (isti problem u menu service)
 
         const menuId = uuidv4();
         return new Menu(menuId, title, description, listOfMenuItems);

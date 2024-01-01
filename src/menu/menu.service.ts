@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Menu } from './type';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { Restaurant } from 'src/restaurant/type';
-import { BaseMenuItemDto } from 'src/menu_item/dto';
+import { MenuItemDto } from 'src/menu_item/dto';
 import { MenuItem } from 'src/menu_item/type';
 
 @Injectable()
@@ -14,12 +14,25 @@ export class MenuService {
   insertMenu(
     title: string,
     description: string,
-    menuItems: BaseMenuItemDto[],
+    menuItems: MenuItemDto[],
   ): string {
     const menuId = uuidv4();
-    const listOfMenuItems = menuItems.map(({ title }) => {
+
+    // const listOfMenuItems = menuItems.map(({ name }) => {
+    //   const menuItemId = uuidv4();
+    //   return new MenuItem(menuItemId, '', '', name, '', 0);
+    // });
+
+    const listOfMenuItems = menuItems.map(({ name }) => {
       const menuItemId = uuidv4();
-      return new MenuItem(menuItemId, title);
+      return new MenuItem(
+        menuItemId,
+        title,
+        menuId,
+        name,
+        description,
+        listOfMenuItems,
+      );
     });
 
     this.menus.push(new Menu(menuId, title, description, listOfMenuItems));

@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { BaseMenuItemDto } from 'src/menu_item/dto';
+import { MenuItemDto } from 'src/menu_item/dto';
 
 export class MenuDto {
   @IsString()
@@ -13,6 +13,6 @@ export class MenuDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => BaseMenuItemDto)
-  menuItems: BaseMenuItemDto[];
+  @Type(() => MenuItemDto)
+  menuItems: MenuItemDto[];
 }

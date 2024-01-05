@@ -14,24 +14,20 @@ export class MenuService {
   insertMenu(
     title: string,
     description: string,
+    restaurantId: string,
     menuItems: MenuItemDto[],
   ): string {
     const menuId = uuidv4();
 
-    // const listOfMenuItems = menuItems.map(({ name }) => {
-    //   const menuItemId = uuidv4();
-    //   return new MenuItem(menuItemId, '', '', name, '', 0);
-    // });
-
-    const listOfMenuItems = menuItems.map(({ name }) => {
+    const listOfMenuItems = menuItems.map(({ name, description, price }) => {
       const menuItemId = uuidv4();
       return new MenuItem(
         menuItemId,
-        title,
+        restaurantId,
         menuId,
         name,
         description,
-        listOfMenuItems,
+        price,
       );
     });
 

@@ -21,6 +21,7 @@ export class MenuController {
     const generatedId = this.menuService.insertMenu(
       body.title,
       body.description,
+      body.restaurantId,
       body.menuItems,
     );
 
